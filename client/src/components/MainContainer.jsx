@@ -12,29 +12,33 @@ const MainContainer = () => {
             setMessages((prevMessages) => [...prevMessages, message])
             console.log(message)
         })
-        return () => {
-            socket.disconnect();
-        };
+        // return () => {
+        //     socket.disconnect();
+        // };
     }, [])
 
     const handleEnterClick = (e) => {
         if(e.key === "Enter"){
-            socket.emit('message', messageInput)
-            setMessageInput('')
+            handleSendMessage();
         }
+    }
+
+    const handleSendMessage = () => {
+        socket.emit('message', messageInput)
+        setMessageInput('')
     }
 
   return (
     <>
         <div className='h-full'>
-            {messages.map((message) => (
-                <div>{message}</div>
+            {messages.map((message, idx) => (
+                <div key={idx}>{message}</div>
             ))}
         </div>
         <div className='absolute bottom-0 left-0 w-full'>
             <div className='max-w-[500px] mx-auto flex items-center gap-4'>
-                <input onKeyDown={handleEnterClick} onChange={(e) => setMessageInput(e.target.value)} value={messageInput} className='bg-gray-500 bg-opacity-10 px-4 py-2 my-4 rounded-lg w-full' type="text" />
-                <button className=''>Send</button>
+                <input placeholder='Type a message' onKeyDown={handleEnterClick} onChange={(e) => setMessageInput(e.target.value)} value={messageInput} className='bg-gray-500 bg-opacity-10 px-4 py-2 my-4 rounded-lg w-full' type="text" />
+                <button onClick={handleSendMessage} className='uppercase'>Send</button>
             </div>
         </div>
     </>
